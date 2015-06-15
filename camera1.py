@@ -96,15 +96,17 @@ while True:
         
     im_past = im.copy()
     
-    k=cv2.waitKey(10)
+    
+    k=cv2.waitKey(100)
     
     #Escキー押せばbreakできるはず．
     #なお自分のPCではできなかったので，iteration数でbreakしている
     if k==27 or i>50:
         break
 
-#以下で開放してあげないと，"Camera dropped frame!"みたいになるので，つらい
+#以下で開放
 cap.release()
 cv2.destroyAllWindows() 
 
+#たまに"Camera dropped frame!"ってなる
 
