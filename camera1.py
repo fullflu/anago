@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 """
-必要そうなライブラリ
+必要そうなライブラリ -- raspberrypi
 
 sudo apt-get install python-numpy
 sudo apt-get install libopencv-dev
@@ -20,7 +20,7 @@ python camera1
 """
 
 
-# detect hands
+# detect hands（これは保留）
 def handdetect(im,mode):
     #when mode is 赤外線
     if mode == "seki":
@@ -46,9 +46,9 @@ def handdetect(im,mode):
         else:
             return True
         
-#手の場所を検出する（今のベスト．）
+#手の場所を検出する（今のところの妥協案）
 def handget(im,im_past,mode):
-    #色判定モード "color2" のとき．
+    #色判定モード "color2" のとき．雑な背景差分．
     if mode=="color2":
         #imとim_pastの差分を計算
         dif = im - im_past
@@ -84,7 +84,7 @@ while True:
     #print(im.shape) -> (720,1200,3)
     #キャプリャされた画像 im は，720×1200×3の3次元配列
     
-    #l=Trueなら手があったと判断 ---単純すぎるので保留
+    #l1=Trueなら手があったと判断 ---単純すぎるので保留
     #l1=handdetect(im,"color1")
     #print("l1=",l1)
     
@@ -94,7 +94,7 @@ while True:
         l2 = handget(im, im_past,"color2")
         print(l2)
         
-    im_past = im
+    im_past = im.copy()
     
     k=cv2.waitKey(10)
     
