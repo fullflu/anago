@@ -17,7 +17,7 @@ sudo apt-get install python-opencv
 """
 ..command
 
-python camera2
+python camera2.py
 
 """
 
