@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 """
-必要そうなライブラリ -- raspberrypi
+必要そうなライブラリ -- (raspberrypiで)
 
 sudo apt-get install python-numpy
 sudo apt-get install libopencv-dev
@@ -15,7 +15,7 @@ sudo apt-get install python-opencv
 """
 実行コマンド
 
-python camera1
+python camera1.py
 
 """
 
