@@ -10,7 +10,7 @@ import random
 """
 ---
 import camera4
-camera4.run()
+camera4.crun()
 
 (break by control+C)
 
