@@ -3,8 +3,21 @@
 int servo_count = 3;
 Servo servo[3];
 
-//now skip the definition of ServoWeight
-//servo_weight should be multiplied by pos, as well as degree_weight
+typedef struct ServoWeight {
+  float right; // バネの右側に位置するサーボの重み
+  float left; // バネの左側に位置するサーボの重み
+} ServoWeight;
+
+// 使うサーボが1個の時の重み
+ServoWeight weight[3];
+// 使うサーボが2個の時の重み
+ServoWeight weight2[3];
+
+//now skip the definition of the value of servo_Weight
+//servo_weight should be multiplied by pos as below
+//servo[i].write(left * (pos - deg_weighted_pos));
+//servo[(i + 1) % servo_count].write(right * (deg_weighted_pos));
+
 
 void setup() {
   // put your setup code here, to run once:
