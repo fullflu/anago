@@ -71,7 +71,7 @@ void loop() {
   
   i = deg / 120;
   for(pos = 0; pos <= 180; pos += 1){
-    int deg_weighted_pos = pos * deg / (120 * (i + 1));//resume pos by degree
+    int deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
     servo[i].write(pos - deg_weighted_pos);
     servo[(i + 1) % servo_count].write(deg_weighted_pos);
     delay(delay_duration);
