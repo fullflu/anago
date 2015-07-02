@@ -42,18 +42,6 @@ union u_tag {
     };
 } u;
 */
-
-int input = 0;
-int serialNumVal(){
-  //unsigned long val;
-  if(Serial.available()){
-    input = Serial.read();
-    /*u.b[0] = Serial.read();
-    val = u.pitch_val;
-    */
-  }
-  return input;
-}
     
 int i = 0;
 int pos = 0;
@@ -64,7 +52,7 @@ bool stop_servo = 0;
 void loop() {
   // put your main code here, to run repeatedly:
   if (Serial.available() > 0) {
-    deg = 2 *serialNumVal();//get the direction for anago to go to
+    deg = 2 *Serial.read();//get the direction for anago to go to
     stop_servo = !stop_servo;
   }
   if (stop_servo) return;
