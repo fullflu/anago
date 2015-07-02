@@ -58,13 +58,15 @@ void loop() {
   }
   if (stop_servo) return;
   for(pos = 0; pos <= 180; pos += 1){
-    deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
+    //deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
+    deg_weighted_pos = int(double(pos) * double(deg - 120 * i) / 120.0);//resume pos by degree
     servo[i].write(pos - deg_weighted_pos);
     servo[(i + 1) % servo_count].write(deg_weighted_pos);
     delay(delay_duration);
   }
   for(pos = 180; pos >= 0; pos -= 1){
-    deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
+    //deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
+    deg_weighted_pos = int(double(pos) * double(deg - 120 * i) / 120.0);//resume pos by degree
     servo[i].write(pos - deg_weighted_pos);
     servo[(i + 1) % servo_count].write(deg_weighted_pos);
     delay(delay_duration);
