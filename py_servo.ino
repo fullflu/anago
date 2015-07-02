@@ -18,57 +18,57 @@ ServoWeight weight2[3];
 //servo[i].write(left * (pos - deg_weighted_pos));
 //servo[(i + 1) % servo_count].write(right * (deg_weighted_pos));
 
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  
   servo[0].attach(2);
   servo[0].write(0);
   servo[1].attach(4);
   servo[1].write(0);
   servo[2].attach(3);
   servo[2].write(0);
-  
   delay(2000);
 }
 
-/*
-union u_tag {
-    byte b[1];
-    struct {
-        unsigned long pitch_val;
-        //unsigned long dur_val;
-    };
-} u;
-*/
-    
 int i = 0;
 int pos = 0;
 int deg = 0;
-int deg_weighted_pos = 0;
 int delay_duration = 70;
 bool stop_servo = 0;
+double deg_weight = 0.0;//weight of degree [0,1)
+int stan = 0;//servo number whose pos is not adjusted
+int change = 1;//servo number whose pos is adjusted
+double change_weight = 0.0;//weight to adjust pos of change servo
+
 void loop() {
   // put your main code here, to run repeatedly:
   if (Serial.available() > 0) {
-    deg = 2 *Serial.read();//get the direction for anago to go to
+    deg = 2 * Serial.read();//get the direction for anago to go to
     stop_servo = !stop_servo;
-    i = deg / 120;
+    i = deg / 120;//get the number of left servo to move
   }
   if (stop_servo) return;
+  deg_weight = double((deg - 120 * i)) / 120.0;
+  if (deg_weight < 0.5){
+    stan = i; 
+    change = (i + 1) % servo_count;
+    change_weight = deg_weight / (1 - deg_weight);
+  }
+  else{
+    stan = (i + 1) % servo_count;
+    change = i;
+    change_weight = (1 - deg_weight) / deg_weight;
+  }
   for(pos = 0; pos <= 180; pos += 1){
-    //deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
-    deg_weighted_pos = int(double(pos) * double(deg - 120 * i) / 120.0);//resume pos by degree
-    servo[i].write(pos - deg_weighted_pos);
-    servo[(i + 1) % servo_count].write(deg_weighted_pos);
+    //adjust pos by degree
+    servo[change].write(int(pos * change_weight));
+    servo[stan].write(pos);
     delay(delay_duration);
   }
   for(pos = 180; pos >= 0; pos -= 1){
-    //deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
-    deg_weighted_pos = int(double(pos) * double(deg - 120 * i) / 120.0);//resume pos by degree
-    servo[i].write(pos - deg_weighted_pos);
-    servo[(i + 1) % servo_count].write(deg_weighted_pos);
+    //adjust pos by degree
+    servo[change].write(int(pos * change_weight));
+    servo[stan].write(pos);
     delay(delay_duration);
   }
   delay(delay_duration);
