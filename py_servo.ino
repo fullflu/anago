@@ -46,7 +46,7 @@ union u_tag {
 int i = 0;
 int pos = 0;
 int deg = 0;
-
+int deg_weighted_pos = 0;
 int delay_duration = 70;
 bool stop_servo = 0;
 void loop() {
@@ -54,17 +54,17 @@ void loop() {
   if (Serial.available() > 0) {
     deg = 2 *Serial.read();//get the direction for anago to go to
     stop_servo = !stop_servo;
+    i = deg / 120;
   }
   if (stop_servo) return;
-  
-  i = deg / 120;
   for(pos = 0; pos <= 180; pos += 1){
-    int deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
+    deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
     servo[i].write(pos - deg_weighted_pos);
     servo[(i + 1) % servo_count].write(deg_weighted_pos);
     delay(delay_duration);
   }
   for(pos = 180; pos >= 0; pos -= 1){
+    deg_weighted_pos = int(double(pos) * double(deg) / double((120 * (i + 1))));//resume pos by degree
     servo[i].write(pos - deg_weighted_pos);
     servo[(i + 1) % servo_count].write(deg_weighted_pos);
     delay(delay_duration);
