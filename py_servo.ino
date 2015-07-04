@@ -1,11 +1,12 @@
 #include <Servo.h>
+#include <math.h>
 
 int servo_count = 3;
 Servo servo[3];
 
 typedef struct ServoWeight {
-  float right; // バネの右側に位置するサーボの重み
-  float left; // バネの左側に位置するサーボの重み
+  float forward; // 動かすサーボのうち前サーボの重み
+  float back; // 動かすサーボのうち，後ろサーボの重み
 } ServoWeight;
 
 // 使うサーボが1個の時の重み
@@ -15,8 +16,8 @@ ServoWeight weight2[3];
 
 //now skip the definition of the value of servo_Weight
 //servo_weight should be multiplied by pos as below
-//servo[i].write(left * (pos - deg_weighted_pos));
-//servo[(i + 1) % servo_count].write(right * (deg_weighted_pos));
+//servo[stan].write(pos);
+//servo[change].write(pos * change_servo_weight * change_deg_weight);
 
 void setup() {
   // put your setup code here, to run once:
@@ -35,10 +36,11 @@ int pos = 0;
 int deg = 0;
 int delay_duration = 70;
 bool stop_servo = 0;
-double deg_weight = 0.0;//weight of degree [0,1)
+double deg_rad = 0.0;//degree transformed to radian
 int stan = 0;//servo number whose pos is not adjusted
 int change = 1;//servo number whose pos is adjusted
-double change_weight = 0.0;//weight to adjust pos of change servo
+double change_deg_weight = 0.0;//weight to adjust pos of change servo
+double change_servo_weight = 0.0;
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -48,26 +50,28 @@ void loop() {
     i = deg / 120;//get the number of left servo to move
   }
   if (stop_servo) return;
-  deg_weight = double((deg - 120 * i)) / 120.0;
-  if (deg_weight < 0.5){
+  deg_rad = double((deg - 120 * i) * PI / 180.0);//;
+  if (deg_rad < PI / 3.0){
     stan = i; 
     change = (i + 1) % servo_count;
-    change_weight = deg_weight / (1 - deg_weight);
+    change_deg_weight = sin(deg_rad) / sin(2 * PI / 3.0 - deg_rad);
+    //change_servo_weight = ,,,;
   }
   else{
     stan = (i + 1) % servo_count;
     change = i;
-    change_weight = (1 - deg_weight) / deg_weight;
+    change_deg_weight = sin(2 * PI / 3.0 - deg_rad) / sin(deg_rad);
+    //change_servo_weight = ,,,;
   }
   for(pos = 0; pos <= 180; pos += 1){
     //adjust pos by degree
-    servo[change].write(int(pos * change_weight));
+    servo[change].write(int(pos * change_deg_weight));
     servo[stan].write(pos);
     delay(delay_duration);
   }
   for(pos = 180; pos >= 0; pos -= 1){
     //adjust pos by degree
-    servo[change].write(int(pos * change_weight));
+    servo[change].write(int(pos * change_deg_weight));
     servo[stan].write(pos);
     delay(delay_duration);
   }
