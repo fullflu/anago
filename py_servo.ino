@@ -14,10 +14,7 @@ ServoWeight weight[3];
 // 使うサーボが2個の時の重み
 ServoWeight weight2[3];
 
-//now skip the definition of the value of servo_Weight
-//servo_weight should be multiplied by pos as below
-//servo[stan].write(pos);
-//servo[change].write(pos * change_servo_weight * change_deg_weight);
+//now skip the definition of the value of servo_weight
 
 void setup() {
   // put your setup code here, to run once:
@@ -65,12 +62,20 @@ void loop() {
   }
   for(pos = 0; pos <= 180; pos += 1){
     //adjust pos by degree
+    /* when you use servo_weight, write like this
+    if(change_servo_weight > 1.0) pos /= change_servo_weight;
+    servo[change].write(int(pos * change_deg_weight * change_servo_weight));
+    */
     servo[change].write(int(pos * change_deg_weight));
     servo[stan].write(pos);
     delay(delay_duration);
   }
   for(pos = 180; pos >= 0; pos -= 1){
     //adjust pos by degree
+    /* when you use servo_weight, write like this
+    if(change_servo_weight > 1.0) pos /= change_servo_weight;
+    servo[change].write(int(pos * change_deg_weight * change_servo_weight));
+    */
     servo[change].write(int(pos * change_deg_weight));
     servo[stan].write(pos);
     delay(delay_duration);
