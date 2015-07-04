@@ -38,8 +38,8 @@ bool stop_servo = 0;
 double deg_rad = 0.0;//degree transformed to radian
 int stan = 0;//servo number whose pos is not adjusted
 int change = 1;//servo number whose pos is adjusted
-double change_deg_weight = 0.0;//weight to adjust pos of change servo
-double change_servo_weight = 0.0;
+double change_deg_weight = 0.0;//deg-based-weight to adjust pos of changing servo
+double change_servo_weight = 1.0;//servo-based-weight to adjust pos of changing servo
 
 void loop() {
   // put your main code here, to run repeatedly:
